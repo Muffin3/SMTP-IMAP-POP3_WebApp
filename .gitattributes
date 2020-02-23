@@ -1,1 +1,3 @@
 venv/* linguist-vendored
+app/static/* linguist-vendored
+app/templates/* linguist-vendored
