@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href={{ url_for('static', filename='mail.css') }}>
+    <link rel="stylesheet" href={{ url_for('static', filename='fontawesome-free-5.12.0-web/css/all.min.css') }}>
+    <link rel="shortcut icon" href={{ url_for('static', filename='favicon.ico') }} type="image/x-icon">
+    <title>Почточка</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <div class="brand">
+          <a href="#" class="link"><i class="fas fa-envelope-open-text text-logo"></i>Почточка</a>
+        </div>
+        <div class="navbar">
+          <ul class="navbar-list">
+            <li class="navbar-item">
+              <a href="{{url_for('index', protocol='pop3')}}" class="navbar-link link">POP3</a>
+            </li>
+            <li class="navbar-item">
+              <a href="{{url_for('index', protocol='imap')}}" class="navbar-link link">IMAP</a>
+            </li>
+          </ul>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="mail">
+          <div class="from">
+            {{mail['From']}}
+          </div>
+
+          <div class="topic">
+            {{mail['Subject']}}
+          </div>
+
+          <div class="msg">
+            {{body}}
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <div class="footer-content">
+          <div class="signs">
+            <a href="/logout/">
+              <p class="sign-item sign-head"><i class="fas fa-door-open text-logo"></i></p>
+              <p class="sign-item">выход</p>
+            </a>
+          </div>
+
+          <div class="social">
+            <ul>
+              <li class="social-item">
+                <a href="https://vk.com/muffin3" class="social-link">
+                  <i class="fab fa-vk"></i>
+                </a>
+              </li>
+              <li class="social-item">
+                <a href="https://github.com/Muffin3" class="social-link">
+                  <i class="fab fa-github"></i>
+                </a>
+              </li>
+              <li class="social-item">
+                <a href="https://t.me/Muffin3" class="social-link">
+                  <i class="fab fa-telegram-plane"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src={{url_for('static', filename='jquery-3.3.1.min.js')}}></script>
+  </body>
+</html>

@@ -1,0 +1,116 @@
+@font-face {
+    font-family: Bebas;
+    src: url(fonts/BebasNeue.ttf);
+}
+
+html, body{
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Bebas;
+}
+
+.content{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.errors{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  top: 0;
+  margin: 0 auto;
+  border: 1px solid #343a40;
+  border-top: 0;
+  border-radius: 0 0 5px 5px;
+  padding: 15px;
+  font-size: 25px;
+  background-color: #F0F0F0;
+}
+
+.error{
+  color: #ff7878;
+}
+
+.auth-block{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 300px;
+  background-color: #343a40;
+}
+
+.auth-form{
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.auth-label{
+  color: white;
+  font-size: 25px;
+  margin: 0;
+}
+
+.field-group{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.field-icon{
+  text-align: center;
+  width: 40px;
+  height: 25px;
+  line-height: 29px;
+  border-radius: 2px 0 0 2px;
+  color: white;
+  border: 1px solid #ff7878;
+  background-color: #ff7878;
+}
+
+.auth-field{
+  border: 1px solid white;
+  border-radius: 0 2px 2px 0;
+  height: 25px;
+  font-size: 15px;
+  padding: 0;
+  color: #ff7878;
+  background-color: #F0F0F0;
+  text-align: center;
+  font-family: Bebas;
+}
+
+.auth-field::-webkit-input-placeholder {
+  color: #ff7878;
+}
+
+.auth-field:focus{
+  outline: none;
+  border: 1px solid #ff7878;
+}
+
+.auth-btn{
+  width: 100px;
+  height: 35px;
+  color: #ff7878;
+  border: 0;
+  border-radius: 4px;
+  font-family: Bebas;
+  transition: 0.5s;
+}
+
+.auth-btn:hover{
+  cursor: pointer;
+  color: white;
+  background-color: #ff7878;
+}
