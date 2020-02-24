@@ -3,6 +3,7 @@ import googletrans
 import imaplib
 from imapclient import imap_utf7
 from email import policy
+import re
 import socket
 
 
@@ -59,18 +60,25 @@ class MyIMAP:
                 mailboxes['inbox'] = ('Входящие', box)
             else:
                 mailbox = mailbox.replace('[Gmail]/', '')
-                ind = translator.translate(mailbox, 'en').text.lower().replace('an ', '').replace('/', '-')
+                ind = translator.translate(mailbox, 'en').text.lower().replace(' ', '').replace('/', '-')
                 mailboxes[ind] = (mailbox, box)
         return mailboxes
 
     def read_msg(self, mailbox, uid):
         mailboxes_list = self.mailboxes_list()
+        message = dict()
         resp, total = self.mail.select(mailboxes_list[mailbox][1])
         if resp == 'OK':
             resp, data = self.mail.uid('fetch', str(uid), '(RFC822)')
             msg = email.message_from_bytes(data[0][1], policy=policy.default)
-            body = self.get_body(msg).decode('utf-8')
-            return msg, body
+            content = self.get_body(msg).decode('utf-8')
+            content = re.sub('\r\n', '<br>', content) if content.find('<head>') < 0 else content
+            message = {'From': msg['From'], 'To': msg['To'], 'Subject': msg['Subject'],
+                       'Content': content, 'Attachments': []}
+            for part in msg.walk():
+                if part.get_filename():
+                    message['Attachments'].append(part.get_filename())
+            return message
 
     def get_body(self, msg):
         if msg.is_multipart():
@@ -115,7 +123,8 @@ class MyIMAP:
         for email_bytes, uid in zip(data, uid_list):
             is_unseen = True if unseen.find(uid) >= 0 else False
             mail = email.message_from_bytes(email_bytes[1], policy=policy.default)
-            mail_info_dict = {'uid': uid, 'from': mail['From'], 'subject': mail['Subject'], 'unseen': is_unseen}
+            mail_info_dict = {'uid': uid, 'from': mail['From'], 'to': mail['To'],
+                              'subject': mail['Subject'], 'unseen': is_unseen}
             messages_list.append(mail_info_dict)
         messages_list.reverse()
         return messages_list

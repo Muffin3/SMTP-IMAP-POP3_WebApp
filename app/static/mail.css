@@ -17,7 +17,7 @@ html, body{
 	min-height: 100%;
 }
 
-.header{
+.my_header{
   display: flex;
   position: fixed;
   flex-direction: row;
@@ -83,11 +83,27 @@ html, body{
 }
 
 .mail{
+  height: 74vh;
+  overflow-x: hidden;
   width: 60%;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
   color: #343a40;
+}
+
+.mail::-webkit-scrollbar{
+  width: 8px;
+  background-color: #F0F0F0;
+}
+
+.mail::-webkit-scrollbar-thumb{
+  border-radius: 5px;
+  background-color: rgba(255, 120, 120, 0.5);
+}
+
+.from > span, .to > span{
+  font-weight: bold;
 }
 
 .footer {

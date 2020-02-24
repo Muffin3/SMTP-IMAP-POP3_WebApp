@@ -1,4 +1,4 @@
-from services import imap
+from . import imap
 
 
 class PostWorker:

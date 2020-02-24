@@ -17,10 +17,10 @@
         <div class="navbar">
           <ul class="navbar-list">
             <li class="navbar-item">
-              <a href="{{url_for('index', protocol='pop3')}}" class="navbar-link link">POP3</a>
+              <a href="" class="navbar-link link">POP3</a>
             </li>
             <li class="navbar-item">
-              <a href="{{url_for('index', protocol='imap')}}" class="navbar-link link">IMAP</a>
+              <a href="{{url_for('imap.index')}}" class="navbar-link link">IMAP</a>
             </li>
           </ul>
         </div>
@@ -40,7 +40,7 @@
           </a>
           <div class="boxes">
             {%for key, box in mailboxes.items()%}
-              <a class="box" href="{{url_for('index', protocol=protocol, mailbox=key)}}">
+              <a class="box" href="{{url_for('imap.index', mailbox=key)}}">
                 {{box[0]}}
               </a>
             {%endfor%}
@@ -64,7 +64,7 @@
                       {% for page in pagination.iter_pages() %}
                         {% if page %}
                             {% if page != pagination.page %}
-                              <a class="other_page" href="{{url_for('index', protocol=protocol, mailbox=mailbox, page=page)}}">{{page}}</a>
+                              <a class="other_page" href="{{url_for('imap.index', mailbox=mailbox, page=page)}}">{{page}}</a>
                             {% else %}
                               <span class="curr_page">{{ page }}</span>
                             {% endif %}
@@ -79,9 +79,9 @@
             <div class="mails">
               {%for mail in mail_list%}
                 {%if mail['unseen']%}
-                  <a href="{{url_for('mail', protocol=protocol, mailbox=mailbox, uid=mail['uid'])}}" class="mail active">
+                  <a href="{{url_for('imap.mail', mailbox=mailbox, uid=mail['uid'])}}" class="mail active">
                 {%else%}
-                  <a href="{{url_for('mail', protocol=protocol, mailbox=mailbox, uid=mail['uid'])}}" class="mail">
+                  <a href="{{url_for('imap.mail', mailbox=mailbox, uid=mail['uid'])}}" class="mail">
                 {%endif%}
                     <div class="mail-check-block">
                       <input class="mail-check reg_mail" type="checkbox" name="mail_ids" value="{{mail['uid']}}" id="{{mail['uid']}}">
@@ -109,7 +109,7 @@
       <footer class="footer">
         <div class="footer-content">
           <div class="signs">
-            <a href="/logout/">
+            <a href="{{url_for('auth.logout')}}">
               <p class="sign-item sign-head"><i class="fas fa-door-open text-logo"></i></p>
               <p class="sign-item">выход</p>
             </a>
