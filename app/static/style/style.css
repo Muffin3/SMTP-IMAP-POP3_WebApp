@@ -82,7 +82,7 @@ html, body{
   margin-bottom: 1vh;
 }
 
-.errors{
+.errors, .notifications{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -96,10 +96,16 @@ html, body{
   padding: 15px;
   font-size: 25px;
   background-color: #F0F0F0;
+  z-index: 1;
+  cursor: pointer;
 }
 
 .error{
   color: #ff7878;
+}
+
+.notification{
+  color: #7aeb34;
 }
 
 .boxes_menu{

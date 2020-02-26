@@ -106,6 +106,31 @@ html, body{
   font-weight: bold;
 }
 
+.attachments{
+  display: flex;
+  flex-direction: row;
+}
+
+.attachment{
+  height: 25px;
+  width: 75px;
+  line-height: 25px;
+  padding: 5px;
+  border: 1px solid #ff7878;
+  border-radius: 25px;
+  color: #343a40;
+  text-align: center;
+  text-decoration: none;
+  transition: .5s;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attachment:hover{
+    border: 1px solid #343a40;
+    background-color: #ff7878;
+}
+
 .footer {
 	flex: 0 0 auto;
   width: 100%;

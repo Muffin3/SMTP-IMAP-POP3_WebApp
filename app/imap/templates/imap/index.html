@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href={{ url_for('static', filename='style.css') }}>
-    <link rel="stylesheet" href={{ url_for('static', filename='fontawesome-free-5.12.0-web/css/all.min.css') }}>
+    <link rel="stylesheet" href={{ url_for('static', filename='style/style.css') }}>
+    <link rel="stylesheet" href={{ url_for('static', filename='style/fontawesome-free-5.12.0-web/css/all.min.css') }}>
     <link rel="shortcut icon" href={{ url_for('static', filename='favicon.ico') }} type="image/x-icon">
     <title>Почточка</title>
   </head>
@@ -12,7 +12,7 @@
     <div class="wrapper">
       <header class="header">
         <div class="brand">
-          <a href="#" class="link"><i class="fas fa-envelope-open-text text-logo"></i>Почточка</a>
+          <a href="{{url_for('imap.index')}}" class="link"><i class="fas fa-envelope-open-text text-logo"></i>Почточка</a>
         </div>
         <div class="navbar">
           <ul class="navbar-list">
@@ -34,8 +34,17 @@
             {%endfor%}
           </div>
         {%endif%}
+
+        {% if 'Notify' in session%}
+          <div class="notifications">
+            {%for notification in session.pop('Notify')%}
+              <div class="notification">{{notification}}</div>
+            {%endfor%}
+          </div>
+        {%endif%}
+
         <div class="boxes_menu">
-          <a class="new_msg" href="/{{protocol}}/new">
+          <a class="new_msg" href="{{url_for('smtp.new_mail')}}">
             <i class="fas fa-plus">Написать</i>
           </a>
           <div class="boxes">
@@ -79,9 +88,9 @@
             <div class="mails">
               {%for mail in mail_list%}
                 {%if mail['unseen']%}
-                  <a href="{{url_for('imap.mail', mailbox=mailbox, uid=mail['uid'])}}" class="mail active">
+                  <a href="{{url_for('imap.readmail', mailbox=mailbox, uid=mail['uid'])}}" class="mail active">
                 {%else%}
-                  <a href="{{url_for('imap.mail', mailbox=mailbox, uid=mail['uid'])}}" class="mail">
+                  <a href="{{url_for('imap.readmail', mailbox=mailbox, uid=mail['uid'])}}" class="mail">
                 {%endif%}
                     <div class="mail-check-block">
                       <input class="mail-check reg_mail" type="checkbox" name="mail_ids" value="{{mail['uid']}}" id="{{mail['uid']}}">
@@ -138,7 +147,7 @@
       </footer>
     </div>
 
-    <script type="text/javascript" src={{url_for('static', filename='jquery-3.3.1.min.js')}}></script>
-  	<script type="text/javascript" src={{url_for('static', filename='script.js')}}></script>
+    <script type="text/javascript" src={{url_for('static', filename='javascript/jquery-3.3.1.min.js')}}></script>
+  	<script type="text/javascript" src={{url_for('static', filename='javascript/script.js')}}></script>
   </body>
 </html>

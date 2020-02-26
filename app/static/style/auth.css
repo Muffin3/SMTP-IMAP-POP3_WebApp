@@ -32,6 +32,7 @@ html, body{
   padding: 15px;
   font-size: 25px;
   background-color: #F0F0F0;
+  cursor: pointer;
 }
 
 .error{

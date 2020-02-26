@@ -1,4 +1,4 @@
-from . import imap
+from . import my_imap
 
 
 class PostWorker:
@@ -6,7 +6,7 @@ class PostWorker:
         self.protocol = self.protocols(protocol)()
 
     def protocols(self, name):
-        return {'imap': imap.MyIMAP}.get(name)
+        return {'imap': my_imap.MyIMAP}.get(name)
 
     def connect(self, *args):
         return self.protocol.connect(args[0], args[1])

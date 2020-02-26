@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href={{ url_for('static', filename='mail.css') }}>
-    <link rel="stylesheet" href={{ url_for('static', filename='fontawesome-free-5.12.0-web/css/all.min.css') }}>
+    <link rel="stylesheet" href={{ url_for('static', filename='style/newmail.css') }}>
+    <link rel="stylesheet" href={{ url_for('static', filename='style/fontawesome-free-5.12.0-web/css/all.min.css') }}>
     <link rel="shortcut icon" href={{ url_for('static', filename='favicon.ico') }} type="image/x-icon">
     <title>Почточка</title>
   </head>
@@ -20,45 +20,55 @@
               <a href="{{url_for('index', protocol='pop3')}}" class="navbar-link link">POP3</a>
             </li>
             <li class="navbar-item">
-              <a href="{{url_for('index', protocol='imap')}}" class="navbar-link link">IMAP</a>
+              <a href="{{url_for('imap.index', protocol='imap')}}" class="navbar-link link">IMAP</a>
             </li>
           </ul>
         </div>
       </header>
 
       <div class="content">
-        <div class="mail">
-          <div class="topic">
-            <h2>
-              {%if message['Subject']%}
-                {{message['Subject']}}
-              {%else%}
-                (без темы)
-              {%endif%}
-            </h2>
+        {% if errors%}
+          <div class="errors">
+            {%for error in errors%}
+              <div class="error">{{error}}</div>
+            {%endfor%}
           </div>
-          <div class="from">
-            <span>Отправитель: </span>
-            {{message['From']}}
-          </div>
+        {%endif%}
 
-          <div class="to">
-            <span>Получатель: </span>
-            {{message['To']}}
+        {% if 'Notify' in session%}
+          <div class="notifications">
+            {%for notification in session.pop('Notify')%}
+              <div class="notification">{{notification}}</div>
+            {%endfor%}
           </div>
+        {%endif%}
 
-          <br><br>
-
-          <div class="msg">
-            {{message['Content']|safe|urlize(40)}}
+        <form class="" enctype="multipart/form-data" action="{{url_for('smtp.new_mail')}}" method="post">
+          <div class="newmail">
+            <div class="to">
+              {{new_mail_form['to']}}
+            </div>
+            <div class="theme">
+              {{new_mail_form['subject']}}
+            </div>
+            <div class="msg_content">
+              {{new_mail_form['mail_body']}}
+            </div>
+            <div class="submit-block">
+              {{new_mail_form['attachments']}}
+              <label for="attachments">
+                <span><i class="fas fa-download"></i>Выберите файлы...</span>
+              </label>
+              {{new_mail_form['submit']}}
+            </div>
           </div>
-        </div>
+        </form>
       </div>
 
       <footer class="footer">
         <div class="footer-content">
           <div class="signs">
-            <a href="/logout/">
+            <a href="{{url_for('auth.logout')}}">
               <p class="sign-item sign-head"><i class="fas fa-door-open text-logo"></i></p>
               <p class="sign-item">выход</p>
             </a>
@@ -87,6 +97,7 @@
       </footer>
     </div>
 
-    <script type="text/javascript" src={{url_for('static', filename='jquery-3.3.1.min.js')}}></script>
+    <script type="text/javascript" src={{url_for('static', filename='javascript/jquery-3.3.1.min.js')}}></script>
+    <script type="text/javascript" src={{url_for('static', filename='javascript/script.js')}}></script>
   </body>
 </html>

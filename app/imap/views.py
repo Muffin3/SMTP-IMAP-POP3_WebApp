@@ -1,8 +1,7 @@
 from . import imap_blueprint as imap
 from flask import redirect, render_template, request, session, url_for, send_file
 from .pagination import Pagination
-from app.services import post_worker
-import io
+from app.services import my_imap
 
 
 @imap.route('/<string:mailbox>/page/<int:page>/', methods=['GET'])
@@ -12,60 +11,53 @@ def index(mailbox, page):
     if 'mailbox' not in session:
         return redirect('/auth/', code=302)
     total, per_page, mail_list, mailboxes, pagination = 0, 20, [], [], None
-    post = post_worker.PostWorker()
-    if post.connect(session['mailbox'][0], session['mailbox'][1]):
-        total, mail_list, mailboxes = post.messages_list(page, per_page, mailbox)
+    imap_obj = my_imap.MyIMAP()
+    if imap_obj.connect(session['mailbox'][0], session['mailbox'][1]):
+        total, mail_list, mailboxes = imap_obj.messages_list(page, per_page, mailbox)
         pagination = Pagination(page, per_page, total)
-    return render_template('imap/index.html', mail_list=mail_list, errors=post.errors, protocol='imap', mailbox=mailbox,
-                           mailboxes=mailboxes, pagination=pagination)
+    return render_template('imap/index.html', mail_list=mail_list, errors=imap_obj.errors, protocol='imap',
+                           mailbox=mailbox, mailboxes=mailboxes, pagination=pagination)
 
 
 @imap.route('/<string:mailbox>/mail/<int:uid>/', methods=['GET'])
-def mail(mailbox, uid):
+def readmail(mailbox, uid):
     message = dict()
-    post = post_worker.PostWorker()
-    if post.connect(session['mailbox'][0], session['mailbox'][1]):
-        message = post.read_msg(mailbox, uid)
-    return render_template('mail.html', protocol='imap', mailbox=mailbox, message=message)
+    imap_obj = my_imap.MyIMAP()
+    if imap_obj.connect(session['mailbox'][0], session['mailbox'][1]):
+        message = imap_obj.read_msg(mailbox, uid)
+    return render_template('imap/readmail.html', protocol='imap', mailbox=mailbox, message=message)
 
 
-@imap.route('/<string:protocol>/<string:mailbox>/mark/seen/', methods=['GET', 'POST'])
-def mark_seen(protocol, mailbox):
+@imap.route('/<string:mailbox>/mark/seen/', methods=['GET', 'POST'])
+def mark_seen(mailbox):
     if request.method == 'POST':
-        post = post_worker.PostWorker(protocol)
-        if post.connect(session['mailbox'][0], session['mailbox'][1]):
-            post.mark_seen(request.form.getlist('mail_ids'), mailbox)
-    return redirect(url_for('index', protocol=protocol, mailbox=mailbox), 302)
+        imap_obj = my_imap.MyIMAP()
+        if imap_obj.connect(session['mailbox'][0], session['mailbox'][1]):
+            imap_obj.mark_seen(request.form.getlist('mail_ids'), mailbox)
+    return redirect(url_for('imap.index', mailbox=mailbox), 302)
 
 
-@imap.route('/<string:protocol>/<string:mailbox>/mark/unseen/', methods=['GET', 'POST'])
-def mark_unseen(protocol, mailbox):
+@imap.route('/<string:mailbox>/mark/unseen/', methods=['GET', 'POST'])
+def mark_unseen(mailbox):
     if request.method == 'POST':
-        post = post_worker.PostWorker(protocol)
-        if post.connect(session['mailbox'][0], session['mailbox'][1]):
-            post.mark_unseen(request.form.getlist('mail_ids'), mailbox)
-    return redirect(url_for('index', protocol=protocol, mailbox=mailbox), 302)
+        imap_obj = my_imap.MyIMAP()
+        if imap_obj.connect(session['mailbox'][0], session['mailbox'][1]):
+            imap_obj.mark_unseen(request.form.getlist('mail_ids'), mailbox)
+    return redirect(url_for('imap.index', mailbox=mailbox), 302)
 
 
-@imap.route('/<string:protocol>/<string:mailbox>/mark/deleted/', methods=['GET', 'POST'])
-def mark_deleted(protocol, mailbox):
+@imap.route('/<string:mailbox>/mark/deleted/', methods=['GET', 'POST'])
+def mark_deleted(mailbox):
     if request.method == 'POST':
-        post = post_worker.PostWorker(protocol)
-        if post.connect(session['mailbox'][0], session['mailbox'][1]):
-            post.mark_deleted(request.form.getlist('mail_ids'), mailbox)
-    return redirect(url_for('index', protocol=protocol, mailbox=mailbox), 302)
+        imap_obj = my_imap.MyIMAP()
+        if imap_obj.connect(session['mailbox'][0], session['mailbox'][1]):
+            imap_obj.mark_deleted(request.form.getlist('mail_ids'), mailbox)
+    return redirect(url_for('imap.index', mailbox=mailbox), 302)
 
 
-@imap.route('/logout/')
-def logout():
-    if 'mailbox' in session:
-        session.pop('mailbox')
-    return redirect('/auth/', 302)
-
-
-@imap.route('/download/')
-def look():
-    file = io.BytesIO()
-    file.write(b'Hello World')
-    file.seek(0)
-    return send_file(file, attachment_filename='file.txt', as_attachment=True, cache_timeout=-1)
+@imap.route('/<string:mailbox>/download/<int:uid>/<string:filename>', methods=['GET'])
+def download(mailbox, filename, uid):
+    file, imap_obj = None, my_imap.MyIMAP()
+    if imap_obj.connect(session['mailbox'][0], session['mailbox'][1]):
+        file = imap_obj.download(mailbox, filename, uid)
+    return send_file(file, attachment_filename=filename, as_attachment=True)

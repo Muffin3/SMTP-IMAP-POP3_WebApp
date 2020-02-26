@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href={{ url_for('static', filename='mail.css') }}>
-    <link rel="stylesheet" href={{ url_for('static', filename='fontawesome-free-5.12.0-web/css/all.min.css') }}>
+    <link rel="stylesheet" href={{ url_for('static', filename='style/readmail.css') }}>
+    <link rel="stylesheet" href={{ url_for('static', filename='style/fontawesome-free-5.12.0-web/css/all.min.css') }}>
     <link rel="shortcut icon" href={{ url_for('static', filename='favicon.ico') }} type="image/x-icon">
     <title>Почточка</title>
   </head>
@@ -20,7 +20,7 @@
               <a href="{{url_for('index', protocol='pop3')}}" class="navbar-link link">POP3</a>
             </li>
             <li class="navbar-item">
-              <a href="{{url_for('index', protocol='imap')}}" class="navbar-link link">IMAP</a>
+              <a href="{{url_for('imap.index', protocol='imap')}}" class="navbar-link link">IMAP</a>
             </li>
           </ul>
         </div>
@@ -46,8 +46,19 @@
             <span>Получатель: </span>
             {{message['To']}}
           </div>
+          <br>
 
-          <br><br>
+          {%if message['Attachments']%}
+            <div class="attachments">
+              {%for attach in message['Attachments']%}
+                <a href="{{url_for('imap.download', mailbox=mailbox, uid=message['uid'], filename=attach)}}" class="attachment">
+                  {{attach}}
+                </a>
+              {%endfor%}
+            </div>
+          {%endif%}
+
+          <br>
 
           <div class="msg">
             {{message['Content']|safe|urlize(40)}}
@@ -87,6 +98,7 @@
       </footer>
     </div>
 
-    <script type="text/javascript" src={{url_for('static', filename='jquery-3.3.1.min.js')}}></script>
+    <script type="text/javascript" src={{url_for('static', filename='javascript/jquery-3.3.1.min.js')}}></script>
+    <script type="text/javascript" src={{url_for('static', filename='javascript/script.js')}}></script>
   </body>
 </html>
