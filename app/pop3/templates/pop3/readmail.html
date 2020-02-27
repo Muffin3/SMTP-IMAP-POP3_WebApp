@@ -12,7 +12,7 @@
     <div class="wrapper">
       <header class="my_header">
         <div class="brand">
-          <a href="{{url_for('index')}}" class="link"><i class="fas fa-envelope-open-text text-logo"></i>Почточка</a>
+          <a href="{{url_for('pop3.index')}}" class="link"><i class="fas fa-envelope-open-text text-logo"></i>Почточка</a>
         </div>
         <div class="navbar">
           <ul class="navbar-list">
@@ -27,6 +27,13 @@
       </header>
 
       <div class="content">
+        {% if errors%}
+          <div class="errors">
+            {%for error in errors%}
+              <div class="error">{{error}}</div>
+            {%endfor%}
+          </div>
+        {%endif%}
         <div class="mail">
           <div class="topic">
             <h2>
@@ -51,7 +58,7 @@
           {%if message['Attachments']%}
             <div class="attachments">
               {%for attach in message['Attachments']%}
-                <a href="{{url_for('imap.download', mailbox=mailbox, uid=message['uid'], filename=attach)}}" class="attachment">
+                <a href="{{url_for('pop3.download', uid=message['id'], filename=attach)}}" class="attachment">
                   {{attach}}
                 </a>
               {%endfor%}

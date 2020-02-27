@@ -116,6 +116,7 @@ html, body{
   width: 75px;
   line-height: 25px;
   padding: 5px;
+  margin-right: 10px;
   border: 1px solid #ff7878;
   border-radius: 25px;
   color: #343a40;

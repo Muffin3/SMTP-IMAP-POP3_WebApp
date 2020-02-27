@@ -12,7 +12,7 @@
     <div class="wrapper">
       <header class="header">
         <div class="brand">
-          <a href="{{url_for('imap.index')}}" class="link"><i class="fas fa-envelope-open-text text-logo"></i>Почточка</a>
+          <a href="{{url_for('pop3.index')}}" class="link"><i class="fas fa-envelope-open-text text-logo"></i>Почточка</a>
         </div>
         <div class="navbar">
           <ul class="navbar-list">
@@ -47,13 +47,6 @@
           <a class="new_msg" href="{{url_for('smtp.new_mail')}}">
             <i class="fas fa-plus">Написать</i>
           </a>
-          <div class="boxes">
-            {%for key, box in mailboxes.items()%}
-              <a class="box" href="{{url_for('imap.index', mailbox=key)}}">
-                {{box[0]}}
-              </a>
-            {%endfor%}
-          </div>
         </div>
         <div class="mailbox">
           <form class="" action="" method="post">
@@ -64,8 +57,6 @@
               </div>
               <div class="control-buttons">
                 <i class="control-button fas fa-trash disabled" title="Удалить" id="deleted"></i>
-                <i class="control-button fas fa-envelope-open disabled" title="Отметить как прочитанное" id="seen"></i>
-                <i class="control-button fas fa-envelope disabled" title="Отметить как непрочитанное" id="unseen"></i>
               </div>
               <div class="">
                 <div class=pagination>
@@ -73,7 +64,7 @@
                       {% for page in pagination.iter_pages() %}
                         {% if page %}
                             {% if page != pagination.page %}
-                              <a class="other_page" href="{{url_for('imap.index', mailbox=mailbox, page=page)}}">{{page}}</a>
+                              <a class="other_page" href="{{url_for('pop3.index', page=page)}}">{{page}}</a>
                             {% else %}
                               <span class="curr_page">{{ page }}</span>
                             {% endif %}
@@ -87,23 +78,15 @@
             </div>
             <div class="mails">
               {%for mail in mail_list%}
-                {%if mail['unseen']%}
-                  <a href="{{url_for('imap.readmail', mailbox=mailbox, uid=mail['uid'])}}" class="mail active">
-                {%else%}
-                  <a href="{{url_for('imap.readmail', mailbox=mailbox, uid=mail['uid'])}}" class="mail">
-                {%endif%}
-                    <div class="mail-check-block">
-                      <input class="mail-check reg_mail" type="checkbox" name="mail_ids" value="{{mail['uid']}}" id="{{mail['uid']}}">
-                      <label class="answer-text" for="{{mail['uid']}}"></label>
-                    </div>
-                    <div class="from">
-                      {%if mailbox == 'sent'%}
-                        {{mail['to']}}
-                      {%else%}
-                        {{mail['from']}}
-                      {%endif%}
-                    </div>
-                    <div class="topic">{{mail['subject']}}</div>
+                <a href="{{url_for('pop3.readmail', mid=mail['id'])}}" class="mail active">
+                  <div class="mail-check-block">
+                    <input class="mail-check reg_mail" type="checkbox" name="mail_ids" value="{{mail['id']}}" id="{{mail['id']}}">
+                    <label class="answer-text" for="{{mail['id']}}"></label>
+                  </div>
+                  <div class="from">
+                      {{mail['From']}}
+                  </div>
+                  <div class="topic">{{mail['Subject']}}</div>
                 </a>
               {%endfor%}
             </div>

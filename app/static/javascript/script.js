@@ -51,7 +51,12 @@ $('.control-button').click(function(){
   let form = $('form');
   let sender = $(this);
   if (!sender.hasClass('disabled')){
-      form.attr('action', '/' + protocol + '/' + mailbox + '/mark/' + sender.attr('id') + '/');
+      if (protocol == 'imap'){
+          form.attr('action', '/' + protocol + '/' + mailbox + '/mark/' + sender.attr('id') + '/');
+      }
+      else{
+        form.attr('action', '/' + protocol + '/mark/' + sender.attr('id') + '/');
+      }
       form.submit();
   }
 })
